@@ -1,193 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gold & Currency Converter</title>
-<style>
-  body {
-    color: #f9f9f9;
-    font-family: "Arial Rounded MT Bold", sans-serif;
-    background: linear-gradient(135deg, #1e1f24, #2f3440);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 25px;
-    min-height: 100vh;
-  }
-  h1 {
-    margin-bottom: 20px;
-    color: #ffd700;
-    text-shadow: 0 0 8px #000;
-  }
-  label {
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 6px;
-  }
-  input, select, button {
-    width: 240px;
-    padding: 9px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    border: 1px solid #555;
-    text-align: center;
-    font-size: 16px;
-    background: #1f2229;
-    color: #f9f9f9;
-  }
-  input:focus, select:focus {
-    outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 6px #007BFF;
-  }
-  button {
-    cursor: pointer;
-    background: #007BFF;
-    color: white;
-    border: none;
-    font-weight: bold;
-    transition: 0.2s;
-  }
-  button:hover {
-    background: #0056b3;
-  }
-  #result {
-    margin-top: 18px;
-    color: #f9f9f9;
-    font-size: 26px;
-    text-align: center;
-    white-space: pre-line;
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px;
-    padding: 12px 20px;
-    box-shadow: inset 0 0 6px rgba(255,255,255,0.1);
-  }
-  footer {
-    margin-top: 30px;
-    font-size: 13px;
-    color: gray;
-  }
-  .note {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #007BFF;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOW.Calc - Gold Value Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .calculator {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #1a2a6c;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #1a2a6c;
+            outline: none;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            margin-top: 30px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .results h2 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: #1a2a6c;
+        }
+        
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="calculator">
+        <div class="header">
+            <h1>WOW.Calc</h1>
+            <p>Calculate the value of your gold in multiple currencies</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="goldCost">Cost of 1,000,000 Gold (USD)</label>
+            <input type="number" id="goldCost" placeholder="Enter cost in USD" min="0" step="0.01">
+        </div>
+        
+        <div class="input-group">
+            <label for="exchangeRate">EGP to USD Exchange Rate</label>
+            <input type="number" id="exchangeRate" placeholder="Enter EGP to USD rate" min="0" step="0.01">
+        </div>
+        
+        <div class="input-group">
+            <label for="creditsCost">Cost of 1,000 Credits (USD)</label>
+            <input type="number" id="creditsCost" placeholder="Enter cost in USD" min="0" step="0.01">
+        </div>
+        
+        <div class="input-group">
+            <label for="goldAmount">Amount of Gold to Calculate</label>
+            <input type="number" id="goldAmount" placeholder="Enter gold amount" min="0" step="1000">
+        </div>
+        
+        <button class="calculate-btn" id="calculateBtn">Calculate Values</button>
+        
+        <div class="results">
+            <h2>Calculation Results</h2>
+            <div class="result-item">
+                <span class="result-label">Gold:</span>
+                <span class="result-value" id="resultGold">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">USD:</span>
+                <span class="result-value" id="resultUSD">$0.00</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">EGP:</span>
+                <span class="result-value" id="resultEGP">EGP 0.00</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Credits:</span>
+                <span class="result-value" id="resultCredits">0</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Created by Ahmed Plally
+        </div>
+    </div>
 
-<h1>💰 Gold & Currency Converter</h1>
-
-<label>USD value of 1M Gold:</label>
-<input id="goldRate">
-
-<label>EGP value of 1 USD:</label>
-<input id="usdToEgp">
-
-<label>USD value of 1000 Credits:</label>
-<input id="creditRate">
-
-<label>Conversion Mode:</label>
-<select id="mode">
-  <option>Gold → USD/EGP/Credits</option>
-  <option>USD → Gold</option>
-  <option>EGP → Gold</option>
-  <option>USD → EGP</option>
-  <option>EGP → USD</option>
-</select>
-
-<label>Amount:</label>
-<input id="amount">
-
-<button id="convertBtn">Convert</button>
-
-<div id="result"></div>
-
-<footer>Created by Ahmed Plally</footer>
-<div class="note">Made to help Posters / Boosters ❤️</div>
-
-<script>
-  const goldRateInput = document.getElementById('goldRate');
-  const usdToEgpInput = document.getElementById('usdToEgp');
-  const creditRateInput = document.getElementById('creditRate');
-  const amountInput = document.getElementById('amount');
-  const modeSelect = document.getElementById('mode');
-  const resultDiv = document.getElementById('result');
-  const convertBtn = document.getElementById('convertBtn');
-
-  function convertArabicDigits(str = "") {
-    const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-    return String(str).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
-  }
-
-  function parseNumberSafe(raw) {
-    const cleaned = convertArabicDigits(raw).replace(/,/g, '').trim();
-    const n = parseFloat(cleaned);
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  function fmt(n, digits = 2) {
-    if (!Number.isFinite(n)) return "0.00";
-    return n.toFixed(digits);
-  }
-
-  function convert() {
-    const goldRate = parseNumberSafe(goldRateInput.value);
-    const usdToEgp = parseNumberSafe(usdToEgpInput.value);
-    const creditRate = parseNumberSafe(creditRateInput.value);
-    const amount = parseNumberSafe(amountInput.value);
-    const mode = modeSelect.value;
-
-    if (!Number.isFinite(goldRate) || !Number.isFinite(usdToEgp) || !Number.isFinite(amount)) {
-      resultDiv.textContent = "⚠ Please enter valid numbers!";
-      return;
-    }
-
-    const hasCredit = Number.isFinite(creditRate) && creditRate !== 0;
-    let text = "";
-
-    switch (mode) {
-      case "Gold → USD/EGP/Credits": {
-        const usd = (amount / 1000000) * goldRate;
-        const egp = usd * usdToEgp;
-        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
-        text = `${amount.toLocaleString()} Gold\nUSD = ${fmt(usd)}\nEGP = ${fmt(egp)}\nCredits = ${fmt(credits)}`;
-        break;
-      }
-      case "USD → Gold": {
-        const gold = (amount / goldRate) * 1000000;
-        const credits = hasCredit ? (amount / creditRate) * 1000 : 0;
-        text = `${fmt(amount)} USD = ${gold.toLocaleString()} Gold\nCredits = ${fmt(credits)}`;
-        break;
-      }
-      case "EGP → Gold": {
-        const usd = amount / usdToEgp;
-        const gold = (usd / goldRate) * 1000000;
-        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
-        text = `${fmt(amount)} EGP = ${gold.toLocaleString()} Gold\nUSD = ${fmt(usd)}\nCredits = ${fmt(credits)}`;
-        break;
-      }
-      case "USD → EGP": {
-        const egp = amount * usdToEgp;
-        const credits = hasCredit ? (amount / creditRate) * 1000 : 0;
-        text = `${fmt(amount)} USD = ${fmt(egp)} EGP\nCredits = ${fmt(credits)}`;
-        break;
-      }
-      case "EGP → USD": {
-        const usd = amount / usdToEgp;
-        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
-        text = `${fmt(amount)} EGP = ${fmt(usd)} USD\nCredits = ${fmt(credits)}`;
-        break;
-      }
-    }
-
-    resultDiv.textContent = text;
-  }
-
-  convertBtn.addEventListener("click", convert);
-  amountInput.addEventListener("keypress", e => { if (e.key === "Enter") convert(); });
-</script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            
+            calculateBtn.addEventListener('click', function() {
+                // Get input values
+                const goldCost = parseFloat(document.getElementById('goldCost').value) || 0;
+                const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 0;
+                const creditsCost = parseFloat(document.getElementById('creditsCost').value) || 0;
+                const goldAmount = parseFloat(document.getElementById('goldAmount').value) || 0;
+                
+                // Perform calculations
+                const usdValue = (goldAmount / 1000000) * goldCost;
+                const egpValue = usdValue * exchangeRate;
+                const creditsValue = (usdValue / creditsCost) * 1000;
+                
+                // Update results
+                document.getElementById('resultGold').textContent = goldAmount.toLocaleString();
+                document.getElementById('resultUSD').textContent = '$' + usdValue.toFixed(2);
+                document.getElementById('resultEGP').textContent = 'EGP ' + egpValue.toFixed(2);
+                document.getElementById('resultCredits').textContent = Math.round(creditsValue).toLocaleString();
+            });
+            
+            // Add some sample values for testing
+            document.getElementById('goldCost').value = '20';
+            document.getElementById('exchangeRate').value = '30.85';
+            document.getElementById('creditsCost').value = '10';
+            document.getElementById('goldAmount').value = '500000';
+        });
+    </script>
 </body>
 </html>
