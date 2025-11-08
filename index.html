@@ -69,7 +69,7 @@
 <label>EGP value of 1 USD:</label>
 <input type="text" id="usdToEgp">
 
-<label>USD value of 1 Credit (optional):</label>
+<label>USD value of 1000 Credits (optional):</label>
 <input type="text" id="creditRate">
 
 <label>Conversion Mode:</label>
@@ -129,38 +129,38 @@ function convert() {
         case "Gold → USD/EGP":
             const usdValue = (amount / 1000000) * goldRate;
             const egpValue = usdValue * usdToEgp;
-            if (isNumber(creditRate)) credits = usdValue / creditRate;
+            if (isNumber(creditRate)) credits = usdValue / (creditRate * 1000);
             resultText = `${amount.toLocaleString()} Gold\nUSD = ${usdValue.toFixed(2)}\nEGP = ${egpValue.toFixed(2)}`;
-            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits (per 1000) = ${credits.toFixed(2)}`;
             break;
 
         case "USD → Gold":
             const goldFromUsd = (amount / goldRate) * 1000000;
-            if (isNumber(creditRate)) credits = amount / creditRate;
+            if (isNumber(creditRate)) credits = amount / (creditRate * 1000);
             resultText = `${amount.toFixed(2)} USD = ${goldFromUsd.toLocaleString()} Gold`;
-            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits (per 1000) = ${credits.toFixed(2)}`;
             break;
 
         case "EGP → Gold":
             const usdFromEgp = amount / usdToEgp;
             const goldFromEgp = (usdFromEgp / goldRate) * 1000000;
-            if (isNumber(creditRate)) credits = usdFromEgp / creditRate;
+            if (isNumber(creditRate)) credits = usdFromEgp / (creditRate * 1000);
             resultText = `${amount.toFixed(2)} EGP = ${goldFromEgp.toLocaleString()} Gold`;
-            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits (per 1000) = ${credits.toFixed(2)}`;
             break;
 
         case "USD → EGP":
             const egpFromUsd = amount * usdToEgp;
-            if (isNumber(creditRate)) credits = amount / creditRate;
+            if (isNumber(creditRate)) credits = amount / (creditRate * 1000);
             resultText = `${amount.toFixed(2)} USD = ${egpFromUsd.toFixed(2)} EGP`;
-            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits (per 1000) = ${credits.toFixed(2)}`;
             break;
 
         case "EGP → USD":
             const usdFromEgp2 = amount / usdToEgp;
-            if (isNumber(creditRate)) credits = usdFromEgp2 / creditRate;
+            if (isNumber(creditRate)) credits = usdFromEgp2 / (creditRate * 1000);
             resultText = `${amount.toFixed(2)} EGP = ${usdFromEgp2.toFixed(2)} USD`;
-            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits (per 1000) = ${credits.toFixed(2)}`;
             break;
     }
 
