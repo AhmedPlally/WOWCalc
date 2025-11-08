@@ -7,7 +7,7 @@
 <style>
     body {
         color: #f9f9f9;
-	font-family: "Arial Rounded MT Bold", sans-serif;
+        font-family: "Arial Rounded MT Bold", sans-serif;
         background: #282C35;
         display: flex;
         flex-direction: column;
@@ -42,7 +42,7 @@
     }
     #result {
         margin-top: 15px;
-	color: #f9f9f9;
+        color: #f9f9f9;
         font-size: 28px;
         text-align: center;
         white-space: pre-line;
@@ -52,8 +52,8 @@
         font-size: 12px;
         color: gray;
     }
-footer2 {
-        margin-top: 20px;
+    .footer2 {
+        margin-top: 5px;
         font-size: 12px;
         color: #007BFF;
     }
@@ -68,6 +68,9 @@ footer2 {
 
 <label>EGP value of 1 USD:</label>
 <input type="text" id="usdToEgp">
+
+<label>USD value of 1 Credit (optional):</label>
+<input type="text" id="creditRate">
 
 <label>Conversion Mode:</label>
 <select id="mode">
@@ -85,73 +88,89 @@ footer2 {
 
 <div id="result"></div>
 
-<footer> Created by Ahmed Plally </footer>
-<footer2> Made to help Posters / Boosters ❤️ </footer2>
-
+<footer>Created by Ahmed Plally</footer>
+<div class="footer2">Made to help Posters / Boosters ❤️</div>
 
 <script>
-    const goldRateInput = document.getElementById('goldRate');
-    const usdToEgpInput = document.getElementById('usdToEgp');
-    const amountInput = document.getElementById('amount');
-    const modeSelect = document.getElementById('mode');
-    const resultDiv = document.getElementById('result');
-    const convertBtn = document.getElementById('convertBtn');
+const goldRateInput = document.getElementById('goldRate');
+const usdToEgpInput = document.getElementById('usdToEgp');
+const creditRateInput = document.getElementById('creditRate');
+const amountInput = document.getElementById('amount');
+const modeSelect = document.getElementById('mode');
+const resultDiv = document.getElementById('result');
+const convertBtn = document.getElementById('convertBtn');
 
-    // Convert Arabic-Indic digits to Western digits
-    function convertArabicDigits(str) {
-        const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-        return str.replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
+// Convert Arabic-Indic digits to Western digits
+function convertArabicDigits(str) {
+    const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return str.replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
+}
+
+function isNumber(value) {
+    return !isNaN(value) && value !== "";
+}
+
+function convert() {
+    let goldRate = parseFloat(convertArabicDigits(goldRateInput.value));
+    let usdToEgp = parseFloat(convertArabicDigits(usdToEgpInput.value));
+    let creditRate = parseFloat(convertArabicDigits(creditRateInput.value));
+    let amount = parseFloat(convertArabicDigits(amountInput.value));
+    const mode = modeSelect.value;
+
+    if (!isNumber(goldRate) || !isNumber(usdToEgp) || !isNumber(amount)) {
+        resultDiv.textContent = "⚠ Please enter valid numbers!";
+        return;
     }
 
-    function isNumber(value) {
-        return !isNaN(value) && value !== "";
+    let resultText = "";
+    let credits; // optional
+
+    switch (mode) {
+        case "Gold → USD/EGP":
+            const usdValue = (amount / 1000000) * goldRate;
+            const egpValue = usdValue * usdToEgp;
+            if (isNumber(creditRate)) credits = usdValue / creditRate;
+            resultText = `${amount.toLocaleString()} Gold\nUSD = ${usdValue.toFixed(2)}\nEGP = ${egpValue.toFixed(2)}`;
+            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            break;
+
+        case "USD → Gold":
+            const goldFromUsd = (amount / goldRate) * 1000000;
+            if (isNumber(creditRate)) credits = amount / creditRate;
+            resultText = `${amount.toFixed(2)} USD = ${goldFromUsd.toLocaleString()} Gold`;
+            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            break;
+
+        case "EGP → Gold":
+            const usdFromEgp = amount / usdToEgp;
+            const goldFromEgp = (usdFromEgp / goldRate) * 1000000;
+            if (isNumber(creditRate)) credits = usdFromEgp / creditRate;
+            resultText = `${amount.toFixed(2)} EGP = ${goldFromEgp.toLocaleString()} Gold`;
+            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            break;
+
+        case "USD → EGP":
+            const egpFromUsd = amount * usdToEgp;
+            if (isNumber(creditRate)) credits = amount / creditRate;
+            resultText = `${amount.toFixed(2)} USD = ${egpFromUsd.toFixed(2)} EGP`;
+            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            break;
+
+        case "EGP → USD":
+            const usdFromEgp2 = amount / usdToEgp;
+            if (isNumber(creditRate)) credits = usdFromEgp2 / creditRate;
+            resultText = `${amount.toFixed(2)} EGP = ${usdFromEgp2.toFixed(2)} USD`;
+            if (credits !== undefined) resultText += `\nCredits = ${credits.toFixed(2)}`;
+            break;
     }
 
-    function convert() {
-        let goldRate = parseFloat(convertArabicDigits(goldRateInput.value));
-        let usdToEgp = parseFloat(convertArabicDigits(usdToEgpInput.value));
-        let amount = parseFloat(convertArabicDigits(amountInput.value));
-        const mode = modeSelect.value;
+    resultDiv.textContent = resultText;
+}
 
-        if (!isNumber(goldRate) || !isNumber(usdToEgp) || !isNumber(amount)) {
-            resultDiv.textContent = "⚠ Please enter valid numbers!";
-            return;
-        }
-
-        let resultText = "";
-
-        switch (mode) {
-            case "Gold → USD/EGP":
-                const usdValue = (amount / 1000000) * goldRate;
-                const egpValue = usdValue * usdToEgp;
-                resultText = `${amount.toLocaleString()} Gold\nUSD = ${usdValue.toFixed(2)}\nEGP = ${egpValue.toFixed(2)}`;
-                break;
-            case "USD → Gold":
-                const goldFromUsd = (amount / goldRate) * 1000000;
-                resultText = `${amount.toFixed(2)} USD = ${goldFromUsd.toLocaleString()} Gold`;
-                break;
-            case "EGP → Gold":
-                const usdFromEgp = amount / usdToEgp;
-                const goldFromEgp = (usdFromEgp / goldRate) * 1000000;
-                resultText = `${amount.toFixed(2)} EGP = ${goldFromEgp.toLocaleString()} Gold`;
-                break;
-            case "USD → EGP":
-                const egpFromUsd = amount * usdToEgp;
-                resultText = `${amount.toFixed(2)} USD = ${egpFromUsd.toFixed(2)} EGP`;
-                break;
-            case "EGP → USD":
-                const usdFromEgp2 = amount / usdToEgp;
-                resultText = `${amount.toFixed(2)} EGP = ${usdFromEgp2.toFixed(2)} USD`;
-                break;
-        }
-
-        resultDiv.textContent = resultText;
-    }
-
-    convertBtn.addEventListener('click', convert);
-    amountInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') convert();
-    });
+convertBtn.addEventListener('click', convert);
+amountInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') convert();
+});
 </script>
 
 </body>
