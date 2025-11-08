@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WOW.Calc - Multi-Currency Calculator</title>
+    <title>WOW.Calc</title>
     <style>
         * {
             margin: 0;
@@ -68,21 +68,19 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #333;
+            text-align: center;
+
         }
         
-        .input-group input, .input-group select {
+        .input-group input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
+            border: center;
+            text-align: center;
             transition: border-color 0.3s;
-        }
-        
-        .input-group input:focus, .input-group select:focus {
-            border-color: #1a2a6c;
-            outline: none;
-            box-shadow: 0 0 5px rgba(26, 42, 108, 0.3);
         }
         
         .currency-input {
@@ -96,6 +94,22 @@
         
         .currency-input select {
             flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            -webkit-appearance: menulist; /* Ensures dropdown works on all browsers */
+            -moz-appearance: menulist;
+            appearance: menulist;
+        }
+        
+        .input-group input:focus, .currency-input select:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 5px rgba(26, 42, 108, 0.3);
         }
         
         .calculate-btn {
@@ -161,8 +175,17 @@
         .footer {
             margin-top: 25px;
             text-align: center;
-            color: #666;
+            color: #b21f1f;
             font-style: italic;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .footer2 {
+            margin-top: 2px;
+            font-size:10px;
+            text-align: center;
+            color: #1a2a6c;
+            font-style: bold;
             padding-top: 15px;
             border-top: 1px solid #eee;
         }
@@ -186,11 +209,11 @@
     <div class="calculator">
         <div class="header">
             <h1>WOW.Calc</h1>
-            <p>Calculate gold value across multiple currencies</p>
+            <p>Boost Calculator</p>
         </div>
         
         <div class="input-group">
-            <label for="goldCost">Cost of 1,000,000 Gold (USD)</label>
+            <label for="goldCost">Cost of 1M Gold (USD)</label>
             <input type="number" id="goldCost" placeholder="Enter cost in USD" min="0" step="0.01">
         </div>
         
@@ -210,8 +233,8 @@
                 <input type="number" id="amountToCalculate" placeholder="Enter amount" min="0" step="0.01">
                 <select id="currencyType">
                     <option value="gold">Gold</option>
-                    <option value="usd">USD ($)</option>
-                    <option value="egp">EGP (ج.م)</option>
+                    <option value="usd">USD</option>
+                    <option value="egp">EGP</option>
                     <option value="credits">Credits</option>
                 </select>
             </div>
@@ -240,6 +263,9 @@
         </div>
         
         <div class="footer">
+            Made to help Boosters / Posters ♡
+        </div>
+        <div class="footer2">
             Created by Ahmed Plally
         </div>
     </div>
