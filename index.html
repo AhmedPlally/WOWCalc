@@ -1,385 +1,193 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Gold • USD • EGP • Credits — Converter</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gold & Currency Converter</title>
 <style>
-  :root{
-    --bg:#0f1720; --card:#111827; --muted:#9aa4b2; --accent:#2dd4bf; --accent-2:#60a5fa;
-    --glass: rgba(255,255,255,0.03);
-    font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color-scheme: dark;
+  body {
+    color: #f9f9f9;
+    font-family: "Arial Rounded MT Bold", sans-serif;
+    background: linear-gradient(135deg, #1e1f24, #2f3440);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    min-height: 100vh;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-      radial-gradient(1000px 600px at 10% 10%, rgba(34,197,94,0.05), transparent 10%),
-      linear-gradient(180deg,#071021 0%, #081424 100%);
-    font-family:inherit;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    padding:28px;
+  h1 {
+    margin-bottom: 20px;
+    color: #ffd700;
+    text-shadow: 0 0 8px #000;
   }
-
-  .app {
-    width:100%;
-    max-width:920px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:14px;
-    padding:20px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
-    border:1px solid rgba(255,255,255,0.03);
-    display:grid;
-    gap:18px;
-    grid-template-columns: 420px 1fr;
-    align-items:start;
+  label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
   }
-
-  header{
-    grid-column:1/-1;
-    display:flex;
-    align-items:center;
-    gap:14px;
+  input, select, button {
+    width: 240px;
+    padding: 9px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    text-align: center;
+    font-size: 16px;
+    background: #1f2229;
+    color: #f9f9f9;
   }
-  .logo{
-    width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    display:flex;align-items:center;justify-content:center;font-weight:700;color:#052024;font-size:20px;
-    box-shadow: 0 6px 18px rgba(16,24,40,0.6);
+  input:focus, select:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 6px #007BFF;
   }
-  h1{margin:0;font-size:18px}
-  p.lead{margin:0;color:var(--muted);font-size:13px}
-
-  /* Left card inputs */
-  .card{
-    background:var(--card);
-    padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
+  button {
+    cursor: pointer;
+    background: #007BFF;
+    color: white;
+    border: none;
+    font-weight: bold;
+    transition: 0.2s;
   }
-  label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-  .field{margin-bottom:12px}
-  input[type="text"], select{
-    width:100%;
-    padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
-    background:rgba(255,255,255,0.02); color:#e6eef6; font-size:15px; outline:none;
+  button:hover {
+    background: #0056b3;
   }
-  input[type="text"]::placeholder{color:rgba(255,255,255,0.12)}
-  select{appearance:none;background-image:linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.08) 50%), linear-gradient(135deg, rgba(255,255,255,0.08) 50%, transparent 50%); background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px); background-size: 8px 8px, 8px 8px; background-repeat: no-repeat;}
-  .small{font-size:12px;color:var(--muted);margin-top:6px}
-
-  /* Right panel: result */
-  .result-panel{
-    padding:20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.02);
-    display:flex;flex-direction:column;gap:12px;min-height:220px;
+  #result {
+    margin-top: 18px;
+    color: #f9f9f9;
+    font-size: 26px;
+    text-align: center;
+    white-space: pre-line;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-shadow: inset 0 0 6px rgba(255,255,255,0.1);
   }
-  .result-head{display:flex;align-items:center;justify-content:space-between}
-  .result-box{
-    background:var(--glass); padding:18px; border-radius:10px; border:1px solid rgba(255,255,255,0.03);
-    font-size:20px; color:#f8fafc; font-weight:600; line-height:1.45;
-    white-space:pre-line;
+  footer {
+    margin-top: 30px;
+    font-size: 13px;
+    color: gray;
   }
-  .meta{color:var(--muted);font-size:13px}
-  .controls{display:flex;gap:8px;align-items:center}
-  .btn {
-    background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#032024;border:none;padding:8px 12px;border-radius:9px;font-weight:600;cursor:pointer;
-  }
-  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
-  .note{font-size:12px;color:var(--muted)}
-
-  .row {display:flex;gap:10px}
-  .col {flex:1}
-
-  footer{grid-column:1/-1;color:var(--muted);font-size:12px;text-align:center;margin-top:6px}
-  @media (max-width:880px){
-    .app{grid-template-columns:1fr; padding:14px}
+  .note {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #007BFF;
   }
 </style>
 </head>
 <body>
-  <main class="app" role="application" aria-label="Gold and currency converter">
-    <header>
-      <div class="logo">G•C</div>
-      <div>
-        <h1>Gold & Currency Converter</h1>
-        <p class="lead">Convert Gold ↔ USD ↔ EGP ↔ Credits (per 1000). Live updates, Arabic digits supported.</p>
-      </div>
-    </header>
 
-    <section class="card" aria-labelledby="inputs-title">
-      <h2 id="inputs-title" style="margin:0 0 8px 0;color:#e6eef6;font-size:14px">Inputs</h2>
+<h1>💰 Gold & Currency Converter</h1>
 
-      <div class="field">
-        <label for="goldRate">USD value of <strong>1,000,000 Gold</strong></label>
-        <input id="goldRate" type="text" inputmode="decimal" placeholder="e.g. 35">
-        <div class="small">Enter how many USD equals 1M gold (like your price for 1M).</div>
-      </div>
+<label>USD value of 1M Gold:</label>
+<input id="goldRate">
 
-      <div class="row">
-        <div class="col field">
-          <label for="usdToEgp">EGP per 1 USD</label>
-          <input id="usdToEgp" type="text" inputmode="decimal" placeholder="e.g. 55">
-        </div>
-        <div class="col field">
-          <label for="creditRate">USD value of <strong>1000 Credits</strong></label>
-          <input id="creditRate" type="text" inputmode="decimal" placeholder="e.g. 5">
-        </div>
-      </div>
+<label>EGP value of 1 USD:</label>
+<input id="usdToEgp">
 
-      <div class="field">
-        <label for="mode">Conversion Mode</label>
-        <select id="mode" aria-label="Conversion mode">
-          <option>Gold → USD/EGP/Credits</option>
-          <option>USD → Gold</option>
-          <option>EGP → Gold</option>
-          <option>USD → EGP</option>
-          <option>EGP → USD</option>
-        </select>
-      </div>
+<label>USD value of 1000 Credits:</label>
+<input id="creditRate">
 
-      <div class="row">
-        <div class="col field">
-          <label for="amount">Amount</label>
-          <input id="amount" type="text" inputmode="numeric" placeholder="e.g. 650000">
-        </div>
-        <div style="width:110px;display:flex;flex-direction:column;gap:8px;justify-content:flex-end;">
-          <label style="visibility:hidden">actions</label>
-          <button id="presetBtn" class="btn ghost" title="Fill example">Use sample</button>
-          <button id="clearBtn" class="btn ghost" title="Clear all">Clear</button>
-        </div>
-      </div>
+<label>Conversion Mode:</label>
+<select id="mode">
+  <option>Gold → USD/EGP/Credits</option>
+  <option>USD → Gold</option>
+  <option>EGP → Gold</option>
+  <option>USD → EGP</option>
+  <option>EGP → USD</option>
+</select>
 
-      <div class="field" style="display:flex;gap:12px;align-items:center;justify-content:flex-start">
-        <input id="creditsInteger" type="checkbox" /> <label for="creditsInteger" style="margin:0;color:var(--muted)">Show Credits as integer (no decimals)</label>
-      </div>
+<label>Amount:</label>
+<input id="amount">
 
-      <div class="small">Tip: You can use Arabic-Indic digits (٠-٩) anywhere and the converter will understand them.</div>
-    </section>
+<button id="convertBtn">Convert</button>
 
-    <section class="result-panel" aria-labelledby="result-title">
-      <div class="result-head">
-        <div>
-          <div style="font-size:13px;color:var(--muted)">Result</div>
-          <div style="font-weight:700;font-size:16px;color:#e6eef6" id="resultTitle">Gold → USD / EGP / Credits</div>
-        </div>
+<div id="result"></div>
 
-        <div class="controls">
-          <div class="meta" id="lastChange">Ready</div>
-          <button id="copyBtn" class="btn" title="Copy result">Copy</button>
-        </div>
-      </div>
-
-      <div class="result-box" id="resultBox">—</div>
-
-      <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
-        <div class="note" id="validation"></div>
-        <div class="note">Created by Ahmed Plally • made for Posters/Boosters ❤️</div>
-      </div>
-    </section>
-
-    <footer>Built live — paste into a file and open in browser</footer>
-  </main>
+<footer>Created by Ahmed Plally</footer>
+<div class="note">Made to help Posters / Boosters ❤️</div>
 
 <script>
-/* Full remake logic
- - Live update on input (debounced)
- - Arabic-Indic digit conversion
- - Credits formula: credits = (USD_amount / USD_per_1000credits) * 1000
- - Validation and copy button
-*/
+  const goldRateInput = document.getElementById('goldRate');
+  const usdToEgpInput = document.getElementById('usdToEgp');
+  const creditRateInput = document.getElementById('creditRate');
+  const amountInput = document.getElementById('amount');
+  const modeSelect = document.getElementById('mode');
+  const resultDiv = document.getElementById('result');
+  const convertBtn = document.getElementById('convertBtn');
 
-const ids = {
-  goldRate: document.getElementById('goldRate'),
-  usdToEgp: document.getElementById('usdToEgp'),
-  creditRate: document.getElementById('creditRate'),
-  amount: document.getElementById('amount'),
-  mode: document.getElementById('mode'),
-  resultBox: document.getElementById('resultBox'),
-  validation: document.getElementById('validation'),
-  lastChange: document.getElementById('lastChange'),
-  copyBtn: document.getElementById('copyBtn'),
-  presetBtn: document.getElementById('presetBtn'),
-  clearBtn: document.getElementById('clearBtn'),
-  creditsInteger: document.getElementById('creditsInteger'),
-  resultTitle: document.getElementById('resultTitle'),
-};
-
-// convert arabic-indic digits
-function convertArabicDigits(str = '') {
-  const arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-  return String(str).replace(/[٠-٩]/g, d => arabic.indexOf(d));
-}
-
-function parseNumber(raw) {
-  if (raw === null || raw === undefined) return NaN;
-  const cleaned = convertArabicDigits(String(raw)).replace(/,/g, '').trim();
-  if (cleaned === '') return NaN;
-  const n = parseFloat(cleaned);
-  return Number.isFinite(n) ? n : NaN;
-}
-
-function fmt(n, digits=2) {
-  if (!Number.isFinite(n)) return "0.00";
-  // show thousands separator, keep fixed decimals
-  return n.toLocaleString(undefined, {minimumFractionDigits: digits, maximumFractionDigits: digits});
-}
-function fmtMaybeInt(n, integerFlag){
-  if (!Number.isFinite(n)) return "0";
-  if (integerFlag) return Math.round(n).toLocaleString();
-  return fmt(n, 2);
-}
-
-let lastInputsSnapshot = '';
-function readSnapshot(){
-  return [
-    ids.goldRate.value, ids.usdToEgp.value, ids.creditRate.value, ids.amount.value, ids.mode.value, ids.creditsInteger.checked
-  ].join('|');
-}
-
-// Debounce live updates
-let debounceTimer = null;
-function scheduleUpdate(delay = 180){
-  if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(update, delay);
-}
-
-function update(){
-  debounceTimer = null;
-  const goldRate = parseNumber(ids.goldRate.value);        // USD per 1,000,000 gold
-  const usdToEgp = parseNumber(ids.usdToEgp.value);        // EGP per 1 USD
-  const creditRate = parseNumber(ids.creditRate.value);    // USD per 1000 credits
-  const amount = parseNumber(ids.amount.value);            // amount depends on mode
-  const mode = ids.mode.value;
-  const showIntCredits = ids.creditsInteger.checked;
-
-  // update title
-  ids.resultTitle.textContent = mode;
-
-  // validation rules
-  const needGoldRate = ["Gold → USD/EGP/Credits","USD → Gold"].includes(mode);
-  const needUsdToEgp = true; // we show EGP when possible; keep it required for accurate EGP outputs
-  const needAmount = true;
-
-  if (!Number.isFinite(amount)) {
-    ids.validation.textContent = "Enter a valid Amount.";
-    ids.resultBox.textContent = "—";
-    ids.lastChange.textContent = "Waiting";
-    return;
+  function convertArabicDigits(str = "") {
+    const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return String(str).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
   }
 
-  if (needGoldRate && !Number.isFinite(goldRate)) {
-    ids.validation.textContent = "Enter USD value for 1,000,000 Gold.";
-    ids.resultBox.textContent = "—";
-    ids.lastChange.textContent = "Waiting";
-    return;
+  function parseNumberSafe(raw) {
+    const cleaned = convertArabicDigits(raw).replace(/,/g, '').trim();
+    const n = parseFloat(cleaned);
+    return Number.isFinite(n) ? n : NaN;
   }
 
-  if (!Number.isFinite(usdToEgp)) {
-    ids.validation.textContent = "Enter EGP per 1 USD.";
-    ids.resultBox.textContent = "—";
-    ids.lastChange.textContent = "Waiting";
-    return;
+  function fmt(n, digits = 2) {
+    if (!Number.isFinite(n)) return "0.00";
+    return n.toFixed(digits);
   }
 
-  ids.validation.textContent = ""; // ok
+  function convert() {
+    const goldRate = parseNumberSafe(goldRateInput.value);
+    const usdToEgp = parseNumberSafe(usdToEgpInput.value);
+    const creditRate = parseNumberSafe(creditRateInput.value);
+    const amount = parseNumberSafe(amountInput.value);
+    const mode = modeSelect.value;
 
-  // helper to safely compute credits: if invalid creditRate -> credits=0
-  const validCreditRate = Number.isFinite(creditRate) && creditRate !== 0;
+    if (!Number.isFinite(goldRate) || !Number.isFinite(usdToEgp) || !Number.isFinite(amount)) {
+      resultDiv.textContent = "⚠ Please enter valid numbers!";
+      return;
+    }
 
-  // compute per mode
-  let text = '';
-  if (mode === "Gold → USD/EGP/Credits") {
-    // USD for amount gold = amount/1,000,000 * goldRate
-    const usdValue = (amount / 1000000) * goldRate;
-    const egpValue = usdValue * usdToEgp;
-    const credits = validCreditRate ? (usdValue / creditRate) * 1000 : 0;
-    text =
-      `${Number(amount).toLocaleString()} Gold\n` +
-      `USD = ${fmt(usdValue)}\n` +
-      `EGP = ${fmt(egpValue)}\n` +
-      `Credits = ${fmtMaybeInt(credits, showIntCredits)}`;
-  } else if (mode === "USD → Gold") {
-    const goldFromUsd = (amount / goldRate) * 1000000;
-    const credits = validCreditRate ? (amount / creditRate) * 1000 : 0;
-    text =
-      `${fmt(amount)} USD = ${Number(goldFromUsd).toLocaleString()} Gold\n` +
-      `Credits = ${fmtMaybeInt(credits, showIntCredits)}`;
-  } else if (mode === "EGP → Gold") {
-    const usdFromEgp = amount / usdToEgp;
-    const goldFromEgp = (usdFromEgp / goldRate) * 1000000;
-    const credits = validCreditRate ? (usdFromEgp / creditRate) * 1000 : 0;
-    text =
-      `${fmt(amount)} EGP = ${Number(goldFromEgp).toLocaleString()} Gold\n` +
-      `USD = ${fmt(usdFromEgp)}\n` +
-      `Credits = ${fmtMaybeInt(credits, showIntCredits)}`;
-  } else if (mode === "USD → EGP") {
-    const egpFromUsd = amount * usdToEgp;
-    const credits = validCreditRate ? (amount / creditRate) * 1000 : 0;
-    text =
-      `${fmt(amount)} USD = ${fmt(egpFromUsd)} EGP\n` +
-      `Credits = ${fmtMaybeInt(credits, showIntCredits)}`;
-  } else if (mode === "EGP → USD") {
-    const usdFromEgp2 = amount / usdToEgp;
-    const credits = validCreditRate ? (usdFromEgp2 / creditRate) * 1000 : 0;
-    text =
-      `${fmt(amount)} EGP = ${fmt(usdFromEgp2)} USD\n` +
-      `Credits = ${fmtMaybeInt(credits, showIntCredits)}`;
-  } else {
-    text = "Unknown mode";
+    const hasCredit = Number.isFinite(creditRate) && creditRate !== 0;
+    let text = "";
+
+    switch (mode) {
+      case "Gold → USD/EGP/Credits": {
+        const usd = (amount / 1000000) * goldRate;
+        const egp = usd * usdToEgp;
+        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
+        text = `${amount.toLocaleString()} Gold\nUSD = ${fmt(usd)}\nEGP = ${fmt(egp)}\nCredits = ${fmt(credits)}`;
+        break;
+      }
+      case "USD → Gold": {
+        const gold = (amount / goldRate) * 1000000;
+        const credits = hasCredit ? (amount / creditRate) * 1000 : 0;
+        text = `${fmt(amount)} USD = ${gold.toLocaleString()} Gold\nCredits = ${fmt(credits)}`;
+        break;
+      }
+      case "EGP → Gold": {
+        const usd = amount / usdToEgp;
+        const gold = (usd / goldRate) * 1000000;
+        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
+        text = `${fmt(amount)} EGP = ${gold.toLocaleString()} Gold\nUSD = ${fmt(usd)}\nCredits = ${fmt(credits)}`;
+        break;
+      }
+      case "USD → EGP": {
+        const egp = amount * usdToEgp;
+        const credits = hasCredit ? (amount / creditRate) * 1000 : 0;
+        text = `${fmt(amount)} USD = ${fmt(egp)} EGP\nCredits = ${fmt(credits)}`;
+        break;
+      }
+      case "EGP → USD": {
+        const usd = amount / usdToEgp;
+        const credits = hasCredit ? (usd / creditRate) * 1000 : 0;
+        text = `${fmt(amount)} EGP = ${fmt(usd)} USD\nCredits = ${fmt(credits)}`;
+        break;
+      }
+    }
+
+    resultDiv.textContent = text;
   }
 
-  ids.resultBox.textContent = text;
-  ids.lastChange.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
-}
-
-// wire inputs to live update (debounced)
-['input','change'].forEach(ev=>{
-  [ids.goldRate, ids.usdToEgp, ids.creditRate, ids.amount, ids.mode, ids.creditsInteger].forEach(el=>{
-    el.addEventListener(ev, ()=> scheduleUpdate(120));
-  });
-});
-
-// copy result
-ids.copyBtn.addEventListener('click', async ()=>{
-  const txt = ids.resultBox.textContent;
-  try{
-    await navigator.clipboard.writeText(txt);
-    ids.copyBtn.textContent = "Copied";
-    setTimeout(()=> ids.copyBtn.textContent = "Copy", 1000);
-  }catch(e){
-    alert("Copy failed — select and copy manually.");
-  }
-});
-
-// preset example 1 (your numbers)
-ids.presetBtn.addEventListener('click', ()=>{
-  ids.goldRate.value = "35";
-  ids.usdToEgp.value = "55";
-  ids.creditRate.value = "5";
-  ids.amount.value = "650000";
-  ids.creditsInteger.checked = true;
-  scheduleUpdate(0);
-});
-
-// clear
-ids.clearBtn.addEventListener('click', ()=>{
-  ids.goldRate.value = "";
-  ids.usdToEgp.value = "";
-  ids.creditRate.value = "";
-  ids.amount.value = "";
-  ids.creditsInteger.checked = false;
-  ids.resultBox.textContent = "—";
-  ids.validation.textContent = "";
-  ids.lastChange.textContent = "Cleared";
-});
-
-// run initial sample so user sees layout filled (optional: comment out)
-ids.presetBtn.click();
-
+  convertBtn.addEventListener("click", convert);
+  amountInput.addEventListener("keypress", e => { if (e.key === "Enter") convert(); });
 </script>
+
 </body>
 </html>
