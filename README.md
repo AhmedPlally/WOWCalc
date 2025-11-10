@@ -18,7 +18,7 @@ This calculator was built to make price conversions easier and faster for both *
 1. Open the calculator directly from this link:  
    👉 [WOWCalc Online](https://ahmedplally.github.io/WOWCalc/)  
 2. Enter the required values.  
-3. Instantly get the price conversion between **Gold, USD, and EGP**.  
+3. Instantly get the price conversion between **Gold, USD, Cridets and EGP**.  
 
 ⚠️ **No download required.** Just open the link and enjoy!  
 
