@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WOW.Calc</title>
+    <title>WOW.Calc - Multi-Currency Calculator</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
         
         body {
-            background: #525252;
+            background: #363636;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -34,6 +34,7 @@
         
         .calculator::before {
             content: '';
+            background: #B81E28;
             position: absolute;
             top: 0;
             left: 0;
@@ -47,7 +48,7 @@
         }
         
         .header h1 {
-            color: #212121;
+            color: #B81E28;
             font-size: 2.2rem;
             margin-bottom: 5px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
@@ -58,6 +59,21 @@
             font-size: 1rem;
         }
         
+        .rate-info {
+            background: #f0f8ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .rate-info p {
+            color: #1a2a6c;
+            font-weight: 500;
+            margin: 0;
+        }
+        
         .input-group {
             margin-bottom: 20px;
         }
@@ -66,7 +82,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
+            color: #B81E28;
             text-align: center;
 
         }
@@ -77,9 +93,9 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            border: center;
-            text-align: center;
             transition: border-color 0.3s;
+            text-align: center;
+
         }
         
         .currency-input {
@@ -110,11 +126,10 @@
             border-color: #1a2a6c;
             outline: none;
             box-shadow: 0 0 5px rgba(26, 42, 108, 0.3);
-            text-align: center;
         }
         
         .calculate-btn {
-            background: #525252;
+            background: #B81E28;
             color: white;
             border: none;
             border-radius: 8px;
@@ -146,7 +161,7 @@
         }
         
         .results h2 {
-            color: #1a2a6c;
+            color: #B81E28;
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.4rem;
@@ -166,29 +181,35 @@
         .result-label {
             font-weight: 600;
             color: #333;
+            text-align: center;
+
         }
         
         .result-value {
             font-weight: 700;
-            color: #1a2a6c;
+            color: #B81E28;
+            text-align: center;
+
         }
         
         .footer {
             margin-top: 25px;
             text-align: center;
-            color: #525252;
+            color: #B81E28;
             font-style: italic;
             padding-top: 15px;
             border-top: 1px solid #eee;
+            font-size: 20px;
         }
         .footer2 {
-            margin-top: 2px;
-            font-size:10px;
+            margin-top: 10px;
             text-align: center;
-            color: #ff0000;
-            font-style: bold;
+            color: #363636;
+            font-style: italic;
             padding-top: 15px;
             border-top: 1px solid #eee;
+            font-size: 10px;
+            
         }
         
         @media (max-width: 480px) {
@@ -202,6 +223,8 @@
             
             .currency-input {
                 flex-direction: column;
+                text-align: center;
+
             }
         }
     </style>
@@ -213,6 +236,7 @@
             <p>Boosting Price Calculator</p>
         </div>
         
+        
         <div class="input-group">
             <label for="goldCost">Cost of 1M Gold (USD)</label>
             <input type="number" id="goldCost" placeholder="Enter cost in USD" min="0" step="0.01">
@@ -221,11 +245,6 @@
         <div class="input-group">
             <label for="exchangeRate">EGP to USD Exchange Rate</label>
             <input type="number" id="exchangeRate" placeholder="Enter EGP to USD rate" min="0" step="0.01">
-        </div>
-        
-        <div class="input-group">
-            <label for="creditsCost">Cost of 1,000 Credits (USD)</label>
-            <input type="number" id="creditsCost" placeholder="Enter cost in USD" min="0" step="0.01">
         </div>
         
         <div class="input-group">
@@ -262,7 +281,6 @@
                 <span class="result-value" id="resultCredits">0</span>
             </div>
         </div>
-        
         <div class="footer">
             Made to help Boosters / Posters ♡
         </div>
@@ -277,16 +295,18 @@
             const resultsDiv = document.getElementById('results');
             const currencyType = document.getElementById('currencyType');
             
+            // Fixed credit rate: 6 USD = 5000 credits
+            const CREDITS_PER_USD = 5000 / 6; // 833.33 credits per 1 USD
+            
             calculateBtn.addEventListener('click', function() {
                 // Get input values
                 const goldCost = parseFloat(document.getElementById('goldCost').value) || 0;
                 const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 0;
-                const creditsCost = parseFloat(document.getElementById('creditsCost').value) || 0;
                 const amountToCalculate = parseFloat(document.getElementById('amountToCalculate').value) || 0;
                 const selectedCurrency = currencyType.value;
                 
                 // Validate inputs
-                if (goldCost <= 0 || exchangeRate <= 0 || creditsCost <= 0 || amountToCalculate <= 0) {
+                if (goldCost <= 0 || exchangeRate <= 0 || amountToCalculate <= 0) {
                     alert("Please enter valid positive values in all fields");
                     return;
                 }
@@ -299,23 +319,23 @@
                         goldAmount = amountToCalculate;
                         usdValue = (goldAmount / 1000000) * goldCost;
                         egpValue = usdValue * exchangeRate;
-                        creditsValue = (usdValue / creditsCost) * 1000;
+                        creditsValue = usdValue * CREDITS_PER_USD;
                         break;
                     case 'usd':
                         usdValue = amountToCalculate;
                         goldAmount = (usdValue / goldCost) * 1000000;
                         egpValue = usdValue * exchangeRate;
-                        creditsValue = (usdValue / creditsCost) * 1000;
+                        creditsValue = usdValue * CREDITS_PER_USD;
                         break;
                     case 'egp':
                         egpValue = amountToCalculate;
                         usdValue = egpValue / exchangeRate;
                         goldAmount = (usdValue / goldCost) * 1000000;
-                        creditsValue = (usdValue / creditsCost) * 1000;
+                        creditsValue = usdValue * CREDITS_PER_USD;
                         break;
                     case 'credits':
                         creditsValue = amountToCalculate;
-                        usdValue = (creditsValue / 1000) * creditsCost;
+                        usdValue = creditsValue / CREDITS_PER_USD;
                         goldAmount = (usdValue / goldCost) * 1000000;
                         egpValue = usdValue * exchangeRate;
                         break;
